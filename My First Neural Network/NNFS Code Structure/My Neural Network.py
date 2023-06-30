@@ -44,10 +44,10 @@ epochs = 500
 learning_rate = 0.2
 start_time = time.time()
 
-dense1 = Layer_Dense(784, 10, weight_lambda_l2=5e-4, bias_lambda_l2=5e-4)
+dense1 = Layer_Dense(784, 400, weight_lambda_l2=5e-4, bias_lambda_l2=5e-4)
 activation1 = Activation_ReLU()
 dropout1 = Layer_Dropout(0.1)
-dense2 = Layer_Dense(10, 10)
+dense2 = Layer_Dense(400, 10)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-5)
 
