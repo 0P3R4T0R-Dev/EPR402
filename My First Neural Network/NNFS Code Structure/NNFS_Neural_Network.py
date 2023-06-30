@@ -2,6 +2,7 @@
 I will be implementing their coding principles in my own way"""
 
 import numpy as np
+from scipy import signal
 
 
 class Layer_Dense:
@@ -313,3 +314,43 @@ class Optimizer_Adam:
     # Call once after any parameter updates
     def post_update_params(self):
         self.iterations += 1
+
+
+class Layer_Convolution:
+    """IMPORTANT to match the syntax of the other components the word kernel is replaced with weight
+    this allows high cohesion of the class with the other components"""
+    def __init__(self, input_shape=(1, 28, 28), kernel_size=3, depth=1):
+        self.d_biases = None
+        self.d_inputs = None
+        self.d_weights = None
+        self.output = None
+        self.inputs = None
+        input_depth, input_height, input_width = input_shape
+        self.depth = depth
+        self.input_shape = input_shape
+        self.input_depth = input_depth
+        self.output_shape = (depth, input_height - kernel_size + 1, input_width - kernel_size + 1)
+        self.weights_shape = (depth, input_depth, kernel_size, kernel_size)
+        self.weights = np.random.randn(*self.weights_shape)
+        self.biases = np.random.randn(*self.output_shape)
+
+    def forward(self, inputs):
+        self.inputs = inputs
+        self.output = np.copy(self.biases)  #initialise the output as the biases for now
+        for i in range(self.depth):
+            for j in range(self.input_depth):
+                temp1 = self.inputs[i]
+                temp2 = self.weights[i, j]
+                self.output[i] += signal.correlate2d(self.inputs[j], self.weights[i, j], "valid")
+
+    def backward(self, d_values):
+        self.d_weights = np.zeros(self.weights_shape)
+        self.d_inputs = np.zeros(self.input_shape)
+        self.d_biases = np.sum(d_values, axis=0, keepdims=True)
+
+        for i in range(self.depth):
+            for j in range(self.input_depth):
+                self.d_weights[i, j] = signal.correlate2d(self.inputs[j], d_values[i], "valid")
+                self.d_inputs[j] += signal.convolve2d(d_values[i], self.weights[i, j], "full")
+
+
