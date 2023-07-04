@@ -3,6 +3,7 @@ I will be implementing their coding principles in my own way"""
 
 import numpy as np
 from scipy import signal
+from Vectorized_Kernel import *
 
 
 class Layer_Dense:
@@ -319,6 +320,7 @@ class Optimizer_Adam:
 class Layer_Convolution:
     """IMPORTANT to match the syntax of the other components the word kernel is replaced with weight
     this allows high cohesion of the class with the other components"""
+
     def __init__(self, input_shape=(1, 28, 28), kernel_size=3, depth=1):
         self.d_biases = None
         self.d_inputs = None
@@ -336,7 +338,7 @@ class Layer_Convolution:
 
     def forward(self, inputs):
         self.inputs = inputs
-        self.output = np.copy(self.biases)  #initialise the output as the biases for now
+        self.output = np.copy(self.biases)  # initialise the output as the biases for now
         for i in range(self.depth):
             for j in range(self.input_depth):
                 temp1 = self.inputs[i]
@@ -352,5 +354,3 @@ class Layer_Convolution:
             for j in range(self.input_depth):
                 self.d_weights[i, j] = signal.correlate2d(self.inputs[j], d_values[i], "valid")
                 self.d_inputs[j] += signal.convolve2d(d_values[i], self.weights[i, j], "full")
-
-

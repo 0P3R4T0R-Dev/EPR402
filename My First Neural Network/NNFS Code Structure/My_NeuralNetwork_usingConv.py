@@ -51,7 +51,7 @@ _, m_train = X_train.shape
 # plt.show()
 
 
-epochs = 500
+epochs = 1
 learning_rate = 0.2
 start_time = time.time()
 
@@ -67,8 +67,11 @@ optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-5)
 
 accuracy = []
 acc = 0
+counter = 0
 for i in range(epochs):
     for sample in X_train.T:
+        print("Counter: ", counter)
+        counter = counter + 1
         conv.forward(np.reshape(sample, (1, 28, 28)))
         convActivation.forward(np.array(conv.output).flatten().reshape((1, 676)))
         dense1.forward(convActivation.output)
