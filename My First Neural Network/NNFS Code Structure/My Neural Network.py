@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 import time
 from NNFS_Neural_Network import *
 
+print("START")
 
 def get_predictions(A2):
     """:returns the  index of the max value in A2
@@ -43,7 +44,7 @@ _, m_train = X_train.shape
 epochs = 1000
 learning_rate = 0.2
 start_time = time.time()
-
+print("HERE")
 dense1 = Layer_Dense(784, 400, weight_lambda_l2=5e-4, bias_lambda_l2=5e-4)
 activation1 = Activation_ReLU()
 dropout1 = Layer_Dropout(0.1)

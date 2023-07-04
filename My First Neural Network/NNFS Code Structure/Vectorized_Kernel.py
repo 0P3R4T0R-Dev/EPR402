@@ -46,9 +46,9 @@ def make_vectorKernel(kernelSize, num_rows, num_cols):
     right = create_array(kernelSize, num_cols)
     return np.kron(left, right)
 
-
-vec = make_vectorKernel(5, 700, 100)
-print(vec.shape)
-
+# this is the shape of the weights matrix  (784, 400)
+# this is the shape of the weights matrix  (400, 10)
+# Important the output size of a vector is rows * cols for the rows and then
+# the columns is = (rows-kernel_size+1) * (cols-kernel_size+1)
 
 

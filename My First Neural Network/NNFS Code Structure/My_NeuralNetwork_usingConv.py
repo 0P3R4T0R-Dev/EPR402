@@ -51,17 +51,15 @@ _, m_train = X_train.shape
 # plt.show()
 
 
-epochs = 500
+epochs = 100
 learning_rate = 0.2
 start_time = time.time()
 
-print("START")
-conv1 = Layer_MyConvolution(784, 400, 5, weight_lambda_l2=5e-4, bias_lambda_l2=5e-4)
-print(time.time() - start_time)
-print("DONE")
+
+conv1 = Layer_MyConvolution(784, 6, weight_lambda_l2=5e-4, bias_lambda_l2=5e-4)
 activation1 = Activation_ReLU()
 dropout1 = Layer_Dropout(0.1)
-dense2 = Layer_Dense(400, 10)
+dense2 = Layer_Dense(conv1.num_neurons, 10)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-5)
 

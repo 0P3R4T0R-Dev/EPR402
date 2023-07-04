@@ -27,7 +27,6 @@ class Layer_Dense:
     def forward(self, inputs):
         self.inputs = inputs
         self.output = np.dot(inputs, self.weights) + self.biases
-        print("this is the shape of the weights matrix ", self.weights.shape)
 
     def backward(self, d_values):
         """The d_ variables represent the (partial) derivatives of the respective variable"""
@@ -362,23 +361,24 @@ class Layer_MyConvolution:
     """IMPORTANT to match the syntax of the other components the word kernel is replaced with weight
     this allows high cohesion of the class with the other components"""
 
-    def __init__(self, num_inputs, num_neurons, kernelSize, weight_lambda_l1=0, weight_lambda_l2=0,
+    def __init__(self, num_inputs, kernelSize, weight_lambda_l1=0, weight_lambda_l2=0,
                  bias_lambda_l1=0, bias_lambda_l2=0):
         self.kernelSize = kernelSize
+        self.num_neurons = int((math.sqrt(num_inputs) - kernelSize + 1) ** 2)
         self.d_weights = None
         self.d_inputs = None
         self.d_biases = None
         self.inputs = None
         self.output = None
-        self.weights = np.random.rand(num_inputs, num_neurons) - 0.5  # weights is inputs X outputs instead of the
+        self.weights = np.random.rand(num_inputs, self.num_neurons) - 0.5  # weights is inputs X outputs instead of the
         # other way to allow me to not have to transpose the whole time
-        self.biases = np.random.rand(1, num_neurons) - 0.5
+        self.biases = np.random.rand(1, self.num_neurons) - 0.5
         # Set regularization strength
         self.weight_lambda_l1 = weight_lambda_l1
         self.weight_lambda_l2 = weight_lambda_l2
         self.bias_lambda_l1 = bias_lambda_l1
         self.bias_lambda_l2 = bias_lambda_l2
-        # self.vectorKernel = make_vectorKernel(self.kernelSize, num_inputs, num_neurons)
+        self.vectorKernel = make_vectorKernel(self.kernelSize, int(math.sqrt(num_inputs)), int(math.sqrt(num_inputs)))
 
     def forward(self, inputs):
         self.inputs = inputs
