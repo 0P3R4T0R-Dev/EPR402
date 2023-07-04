@@ -31,3 +31,24 @@ def createVectorMatrix(kernelSize, input_Num_row, input_Num_col):
             vectorMatrix.append(row)
     return np.array(vectorMatrix).T
 
+
+def create_array(kernel_size, inputNum):
+    arr = np.ones(kernel_size, dtype=int)
+    remaining_rows = inputNum - kernel_size
+    zero_rows = np.zeros(remaining_rows, dtype=int)
+    result = np.concatenate((arr, zero_rows))
+    A = np.array([np.roll(result, i) for i in range(inputNum - kernel_size + 1)]).T
+    return A
+
+
+def make_vectorKernel(kernelSize, num_rows, num_cols):
+    left = create_array(kernelSize, num_rows)
+    right = create_array(kernelSize, num_cols)
+    return np.kron(left, right)
+
+
+vec = make_vectorKernel(5, 700, 100)
+print(vec.shape)
+
+
+

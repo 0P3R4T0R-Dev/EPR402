@@ -51,14 +51,14 @@ _, m_train = X_train.shape
 # plt.show()
 
 
-epochs = 1
+epochs = 500
 learning_rate = 0.2
 start_time = time.time()
 
-conv = Layer_Convolution()
-convActivation = Activation_Leaky_ReLU()
-numSamplesInOutput = conv.output_shape[0] * conv.output_shape[1] * conv.output_shape[2]
-dense1 = Layer_Dense(numSamplesInOutput, 400, weight_lambda_l2=5e-4, bias_lambda_l2=5e-4)
+print("START")
+conv1 = Layer_MyConvolution(784, 400, 5, weight_lambda_l2=5e-4, bias_lambda_l2=5e-4)
+print(time.time() - start_time)
+print("DONE")
 activation1 = Activation_ReLU()
 dropout1 = Layer_Dropout(0.1)
 dense2 = Layer_Dense(400, 10)
@@ -69,38 +69,30 @@ accuracy = []
 acc = 0
 counter = 0
 for i in range(epochs):
-    for sample in X_train.T:
-        print("Counter: ", counter)
-        counter = counter + 1
-        conv.forward(np.reshape(sample, (1, 28, 28)))
-        convActivation.forward(np.array(conv.output).flatten().reshape((1, 676)))
-        dense1.forward(convActivation.output)
-        activation1.forward(dense1.output)
-        dropout1.forward(activation1.output)
-        dense2.forward(dropout1.output)
-        data_loss = loss_activation.forward(dense2.output, Y_train)
+    conv1.forward(X_train.T)
+    activation1.forward(conv1.output)
+    dropout1.forward(activation1.output)
+    dense2.forward(dropout1.output)
+    data_loss = loss_activation.forward(dense2.output, Y_train)
 
-        regularization_loss = \
-            loss_activation.loss.regularization_loss(dense1) + \
-            loss_activation.loss.regularization_loss(dense2)
-        loss = data_loss + regularization_loss
+    regularization_loss = \
+        loss_activation.loss.regularization_loss(conv1) + \
+        loss_activation.loss.regularization_loss(dense2)
+    loss = data_loss + regularization_loss
 
-        loss_activation.backward(loss_activation.output, Y_train)
-        dense2.backward(loss_activation.d_inputs)
-        dropout1.backward(dense2.d_inputs)
-        activation1.backward(dropout1.d_inputs)
-        dense1.backward(activation1.d_inputs)
-        convActivation.backward(dense1.d_inputs)
-        conv.backward(convActivation.d_inputs.reshape((1, 26, 26)))
+    loss_activation.backward(loss_activation.output, Y_train)
+    dense2.backward(loss_activation.d_inputs)
+    dropout1.backward(dense2.d_inputs)
+    activation1.backward(dropout1.d_inputs)
+    conv1.backward(activation1.d_inputs)
 
-        optimizer.pre_update_params()
-        optimizer.update_params(conv)
-        optimizer.update_params(dense1)
-        optimizer.update_params(dense2)
-        optimizer.post_update_params()
+    optimizer.pre_update_params()
+    optimizer.update_params(conv1)
+    optimizer.update_params(dense2)
+    optimizer.post_update_params()
 
-    dense1.forward(X_dev.T)
-    activation1.forward(dense1.output)
+    conv1.forward(X_dev.T)
+    activation1.forward(conv1.output)
     dense2.forward(activation1.output)
     loss_activation.forward(dense2.output, Y_dev)
     prediction = get_predictions(loss_activation.output)

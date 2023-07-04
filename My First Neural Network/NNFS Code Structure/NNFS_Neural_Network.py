@@ -2,6 +2,7 @@
 I will be implementing their coding principles in my own way"""
 
 import numpy as np
+import math
 from scipy import signal
 from Vectorized_Kernel import *
 
@@ -26,6 +27,7 @@ class Layer_Dense:
     def forward(self, inputs):
         self.inputs = inputs
         self.output = np.dot(inputs, self.weights) + self.biases
+        print("this is the shape of the weights matrix ", self.weights.shape)
 
     def backward(self, d_values):
         """The d_ variables represent the (partial) derivatives of the respective variable"""
@@ -354,3 +356,57 @@ class Layer_Convolution:
             for j in range(self.input_depth):
                 self.d_weights[i, j] = signal.correlate2d(self.inputs[j], d_values[i], "valid")
                 self.d_inputs[j] += signal.convolve2d(d_values[i], self.weights[i, j], "full")
+
+
+class Layer_MyConvolution:
+    """IMPORTANT to match the syntax of the other components the word kernel is replaced with weight
+    this allows high cohesion of the class with the other components"""
+
+    def __init__(self, num_inputs, num_neurons, kernelSize, weight_lambda_l1=0, weight_lambda_l2=0,
+                 bias_lambda_l1=0, bias_lambda_l2=0):
+        self.kernelSize = kernelSize
+        self.d_weights = None
+        self.d_inputs = None
+        self.d_biases = None
+        self.inputs = None
+        self.output = None
+        self.weights = np.random.rand(num_inputs, num_neurons) - 0.5  # weights is inputs X outputs instead of the
+        # other way to allow me to not have to transpose the whole time
+        self.biases = np.random.rand(1, num_neurons) - 0.5
+        # Set regularization strength
+        self.weight_lambda_l1 = weight_lambda_l1
+        self.weight_lambda_l2 = weight_lambda_l2
+        self.bias_lambda_l1 = bias_lambda_l1
+        self.bias_lambda_l2 = bias_lambda_l2
+        # self.vectorKernel = make_vectorKernel(self.kernelSize, num_inputs, num_neurons)
+
+    def forward(self, inputs):
+        self.inputs = inputs
+        self.output = np.dot(inputs, self.weights) + self.biases
+
+    def backward(self, d_values):
+        """The d_ variables represent the (partial) derivatives of the respective variable"""
+        self.d_weights = np.dot(self.inputs.T, d_values)
+        self.d_biases = np.sum(d_values, axis=0, keepdims=True)
+
+        # Gradients on regularization
+        # L1 on weights
+        if self.weight_lambda_l1 > 0:
+            dL1 = np.ones_like(self.weights)
+            dL1[self.weights < 0] = -1
+            self.d_weights += self.weight_lambda_l1 * dL1
+        # L2 on weights
+        if self.weight_lambda_l2 > 0:
+            self.d_weights += 2 * self.weight_lambda_l2 * self.weights
+        # L1 on biases
+        if self.bias_lambda_l1 > 0:
+            dL1 = np.ones_like(self.biases)
+            dL1[self.biases < 0] = -1
+            self.d_biases += self.bias_lambda_l1 * dL1
+        # L2 on biases
+        if self.bias_lambda_l2 > 0:
+            self.d_biases += 2 * self.bias_lambda_l2 * self.biases
+
+        # Gradient on values
+        self.d_inputs = np.dot(d_values, self.weights.T)
+
