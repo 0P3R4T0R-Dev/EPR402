@@ -2,6 +2,9 @@
 I will be implementing their coding principles in my own way"""
 
 import numpy as np
+import math
+from scipy import signal
+from Vectorized_Kernel import *
 
 
 class Layer_Dense:
@@ -313,3 +316,97 @@ class Optimizer_Adam:
     # Call once after any parameter updates
     def post_update_params(self):
         self.iterations += 1
+
+
+class Layer_Convolution:
+    """IMPORTANT to match the syntax of the other components the word kernel is replaced with weight
+    this allows high cohesion of the class with the other components"""
+
+    def __init__(self, input_shape=(1, 28, 28), kernel_size=3, depth=1):
+        self.d_biases = None
+        self.d_inputs = None
+        self.d_weights = None
+        self.output = None
+        self.inputs = None
+        input_depth, input_height, input_width = input_shape
+        self.depth = depth
+        self.input_shape = input_shape
+        self.input_depth = input_depth
+        self.output_shape = (depth, input_height - kernel_size + 1, input_width - kernel_size + 1)
+        self.weights_shape = (depth, input_depth, kernel_size, kernel_size)
+        self.weights = np.random.randn(*self.weights_shape)
+        self.biases = np.random.randn(*self.output_shape)
+
+    def forward(self, inputs):
+        self.inputs = inputs
+        self.output = np.copy(self.biases)  # initialise the output as the biases for now
+        for i in range(self.depth):
+            for j in range(self.input_depth):
+                temp1 = self.inputs[i]
+                temp2 = self.weights[i, j]
+                self.output[i] += signal.correlate2d(self.inputs[j], self.weights[i, j], "valid")
+
+    def backward(self, d_values):
+        self.d_weights = np.zeros(self.weights_shape)
+        self.d_inputs = np.zeros(self.input_shape)
+        self.d_biases = np.sum(d_values, axis=0, keepdims=True)
+
+        for i in range(self.depth):
+            for j in range(self.input_depth):
+                self.d_weights[i, j] = signal.correlate2d(self.inputs[j], d_values[i], "valid")
+                self.d_inputs[j] += signal.convolve2d(d_values[i], self.weights[i, j], "full")
+
+
+class Layer_MyConvolution:
+    """IMPORTANT to match the syntax of the other components the word kernel is replaced with weight
+    this allows high cohesion of the class with the other components"""
+
+    def __init__(self, num_inputs, kernelSize, weight_lambda_l1=0, weight_lambda_l2=0,
+                 bias_lambda_l1=0, bias_lambda_l2=0):
+        self.kernelSize = kernelSize
+        self.num_neurons = int((math.sqrt(num_inputs) - kernelSize + 1) ** 2)
+        self.d_weights = None
+        self.d_inputs = None
+        self.d_biases = None
+        self.inputs = None
+        self.output = None
+        self.weights = np.random.rand(num_inputs, self.num_neurons) - 0.5  # weights is inputs X outputs instead of the
+        # other way to allow me to not have to transpose the whole time
+        self.biases = np.random.rand(1, self.num_neurons) - 0.5
+        # Set regularization strength
+        self.weight_lambda_l1 = weight_lambda_l1
+        self.weight_lambda_l2 = weight_lambda_l2
+        self.bias_lambda_l1 = bias_lambda_l1
+        self.bias_lambda_l2 = bias_lambda_l2
+        self.vectorKernel = make_vectorKernel(self.kernelSize, int(math.sqrt(num_inputs)), int(math.sqrt(num_inputs)))
+
+    def forward(self, inputs):
+        self.inputs = inputs
+        self.output = np.dot(inputs, self.weights) + self.biases
+
+    def backward(self, d_values):
+        """The d_ variables represent the (partial) derivatives of the respective variable"""
+        self.d_weights = np.dot(self.inputs.T, d_values)
+        self.d_biases = np.sum(d_values, axis=0, keepdims=True)
+
+        # Gradients on regularization
+        # L1 on weights
+        if self.weight_lambda_l1 > 0:
+            dL1 = np.ones_like(self.weights)
+            dL1[self.weights < 0] = -1
+            self.d_weights += self.weight_lambda_l1 * dL1
+        # L2 on weights
+        if self.weight_lambda_l2 > 0:
+            self.d_weights += 2 * self.weight_lambda_l2 * self.weights
+        # L1 on biases
+        if self.bias_lambda_l1 > 0:
+            dL1 = np.ones_like(self.biases)
+            dL1[self.biases < 0] = -1
+            self.d_biases += self.bias_lambda_l1 * dL1
+        # L2 on biases
+        if self.bias_lambda_l2 > 0:
+            self.d_biases += 2 * self.bias_lambda_l2 * self.biases
+
+        # Gradient on values
+        self.d_inputs = np.dot(d_values, self.weights.T)
+
