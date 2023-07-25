@@ -60,8 +60,8 @@ def align_images(image, template, maxFeatures=500, keepPercent=0.2,
     return aligned
 
 
-image = cv2.imread("User Input Form V2 stefan lower.jpg")
-template = cv2.imread("User Input Form V2 template.jpg")
+image = cv2.imread("User Input Form V3 stefan lower.jpg")
+template = cv2.imread("User Input Form V3 template.jpg")
 
 aligned = align_images(image, template, debug=True)
 
