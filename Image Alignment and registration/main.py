@@ -20,7 +20,7 @@ for y_num, char in enumerate(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
     for num in range(6):
         OCR_LOCATIONS.append(OCRLocation(char + "_" + str(num), (x_values[num], y_values[y_num], 114, 93)))
 
-image = cv2.imread("User Input Form V3 stefan lower.jpg")
+image = cv2.imread("test.jpg")
 template = cv2.imread("User Input Form V3 template.jpg")
 
 aligned = align_images(image, template)
@@ -41,5 +41,11 @@ for loc in OCR_LOCATIONS:
             grouped_characters[loc.id[0]][i] = roi
             break
 
+arrayToSave = np.array(constructGridRandomly(grouped_characters))
 for i in range(5):
-    constructGridRandomly(grouped_characters, debug=True)
+    array = constructGridRandomly(grouped_characters, debug=True)
+    arrayToSave = np.hstack((arrayToSave, array))
+
+imageToSave = Image.fromarray(arrayToSave)
+imageToSave.show()
+# imageToSave.save("output samples 5 Myburgh.jpg")

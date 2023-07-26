@@ -1,4 +1,4 @@
-# import the necessary packages
+# Take the image of the form and the template and align them
 import numpy as np
 import imutils
 import cv2
@@ -61,7 +61,7 @@ def align_images(image, template, maxFeatures=500, keepPercent=0.2,
 
 
 if __name__ == "__main__":
-    image = cv2.imread("User Input Form V3 stefan lower.jpg")
+    image = cv2.imread("testMyburgh.jpg")
     template = cv2.imread("User Input Form V3 template.jpg")
 
     aligned = align_images(image, template, debug=True)
