@@ -20,7 +20,7 @@ for y_num, char in enumerate(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
     for num in range(6):
         OCR_LOCATIONS.append(OCRLocation(char + "_" + str(num), (x_values[num], y_values[y_num], 114, 93)))
 
-image = cv2.imread("test.jpg")
+image = cv2.imread("test upscaled with EDSR.jpg")
 template = cv2.imread("User Input Form V3 template.jpg")
 
 aligned = align_images(image, template)
@@ -48,4 +48,4 @@ for i in range(5):
 
 imageToSave = Image.fromarray(arrayToSave)
 imageToSave.show()
-# imageToSave.save("output samples 5 Myburgh.jpg")
+imageToSave.save("output samples 5 with EDSR upscaled test.jpg")
