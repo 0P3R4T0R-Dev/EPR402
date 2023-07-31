@@ -28,11 +28,11 @@ while flag:
     cv2.imshow('frame', frameSmaller)
     if cv2.waitKey(1) == ord('q'):
         flag = False
-        cv2.imwrite("testMyburgh.jpg", frame)
+        cv2.imwrite("FormDavid.jpg", frame)
         break
 
 cam.release()
 cv2.destroyAllWindows()
 
-image = Image.open("testMyburgh.jpg")
+image = Image.open("FormDavid.jpg")
 image.show()

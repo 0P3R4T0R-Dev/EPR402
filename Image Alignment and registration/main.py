@@ -8,11 +8,15 @@ from PIL import Image
 import numpy as np
 from Grid import *
 
+person = "Karen"
+ID = "0"
+num_samples = 10000
+
 # create a named tuple which we can use to create locations of the
 # input document which we wish to OCR
 OCRLocation = namedtuple("OCRLocation", ["id", "bbox"])  # x, y, w, h
-y_values = [577, 675, 773, 871, 969, 1067, 1165, 1263, 1361, 1459, 1557, 1655, 1753, 1851, 1949, 2047, 2145, 2243, 2341,
-            2439, 2537, 2635, 2733, 2831, 2929, 3027]
+y_values = [608, 706, 804, 902, 999, 1097, 1195, 1293, 1391, 1489, 1587, 1685, 1783, 1881, 1979, 2077, 2175, 2273, 2371,
+            2469, 2567, 2665, 2763, 2861, 2959, 3057]
 x_values = [790, 909, 1028, 1147, 1266, 1385]
 OCR_LOCATIONS = []
 for y_num, char in enumerate(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
@@ -20,7 +24,7 @@ for y_num, char in enumerate(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
     for num in range(6):
         OCR_LOCATIONS.append(OCRLocation(char + "_" + str(num), (x_values[num], y_values[y_num], 114, 93)))
 
-image = cv2.imread("test upscaled with EDSR.jpg")
+image = cv2.imread("Forms/Form"+person+".jpg")
 template = cv2.imread("User Input Form V3 template.jpg")
 
 aligned = align_images(image, template)
@@ -48,4 +52,8 @@ for i in range(5):
 
 imageToSave = Image.fromarray(arrayToSave)
 imageToSave.show()
-imageToSave.save("output samples 5 with EDSR upscaled test.jpg")
+imageToSave.save("output samples 5 V4.jpg")
+# for i in range(num_samples):
+#     array = constructGridRandomly(grouped_characters)
+#     imageToSave = Image.fromarray(array)
+#     imageToSave.save("../"+person+"_TrainingData_"+ID+"/"+person+"Grid-" + str(i) + "-.jpg")

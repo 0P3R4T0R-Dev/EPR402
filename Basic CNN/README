@@ -1,0 +1,5 @@
+This is my implementation of the basic version of my CNN, the goal is to identify only lowercase letters
+and only to recognize 3 different peoples handwriting
+
+input will be 18750 pixels (150x125) and output will be 3 different classes (3 people)
+
