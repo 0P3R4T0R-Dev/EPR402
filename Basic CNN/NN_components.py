@@ -68,7 +68,7 @@ class Layer_Dropout:
         # Save input values
         self.inputs = inputs
         # Generate and save scaled mask
-        self.binary_mask = np.random.binomial(1, self.rate, size=inputs.shape) / self.rate
+        self.binary_mask = (np.random.binomial(1, self.rate, size=inputs.shape) / self.rate) if self.rate != 0.0 else 1
         # Apply mask to output values
         self.output = inputs * self.binary_mask
 
@@ -202,8 +202,8 @@ class Loss_CategoricalCrossEntropy(Loss):
         correct_confidences = None
         if len(y_true.shape) == 1:  # 1D arrays
             correct_confidences = y_predicted_clipped[range(num_samples), y_true]
-        elif len(y_true.shape) == 2:  # this is true for 2D arrays
-            correct_confidences = np.sum(y_predicted_clipped * y_true, axis=1)
+        # elif len(y_true.shape) == 2:  # this is true for 2D arrays
+        #     correct_confidences = np.sum(y_predicted_clipped * y_true, axis=1)
         negative_log_likelihoods = -np.log(correct_confidences)
         return negative_log_likelihoods
 
@@ -286,6 +286,8 @@ class Optimizer_Adam:
     def update_params(self, layer):
         # If layer does not contain cache arrays,
         # create them filled with zeros
+        if not hasattr(layer, 'weights'):
+            return
         if not hasattr(layer, 'weight_cache'):
             layer.weight_momentum = np.zeros_like(layer.weights)
             layer.weight_cache = np.zeros_like(layer.weights)
@@ -409,7 +411,6 @@ class Layer_MyConvolution:
 
         # Gradient on values
         self.d_inputs = np.dot(d_values, self.weights.T)
-
 
 
 def get_predictions(A2):

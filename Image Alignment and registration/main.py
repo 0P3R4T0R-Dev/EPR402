@@ -8,9 +8,9 @@ from PIL import Image
 import numpy as np
 from Grid import *
 
-person = "Karen"
-ID = "0"
-num_samples = 10000
+person = "David"
+ID = "3"
+num_samples = 5000
 
 # create a named tuple which we can use to create locations of the
 # input document which we wish to OCR
@@ -25,7 +25,7 @@ for y_num, char in enumerate(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
         OCR_LOCATIONS.append(OCRLocation(char + "_" + str(num), (x_values[num], y_values[y_num], 114, 93)))
 
 image = cv2.imread("Forms/Form"+person+".jpg")
-template = cv2.imread("User Input Form V3 template.jpg")
+template = cv2.imread("User Input Form V4 template.jpg")
 
 aligned = align_images(image, template)
 
@@ -45,15 +45,16 @@ for loc in OCR_LOCATIONS:
             grouped_characters[loc.id[0]][i] = roi
             break
 
-arrayToSave = np.array(constructGridRandomly(grouped_characters))
-for i in range(5):
-    array = constructGridRandomly(grouped_characters, debug=True)
-    arrayToSave = np.hstack((arrayToSave, array))
-
-imageToSave = Image.fromarray(arrayToSave)
-imageToSave.show()
-imageToSave.save("output samples 5 V4.jpg")
-# for i in range(num_samples):
-#     array = constructGridRandomly(grouped_characters)
-#     imageToSave = Image.fromarray(array)
-#     imageToSave.save("../"+person+"_TrainingData_"+ID+"/"+person+"Grid-" + str(i) + "-.jpg")
+# arrayToSave = np.array(constructGridRandomly(grouped_characters))
+# for i in range(5):
+#     array = constructGridRandomly(grouped_characters, debug=True)
+#     arrayToSave = np.hstack((arrayToSave, array))
+#
+# imageToSave = Image.fromarray(arrayToSave)
+# imageToSave.show()
+# imageToSave.save("output samples 5 V4.jpg")
+for i in range(num_samples):
+    print(i, "/", num_samples)
+    array = constructGridRandomly(grouped_characters)
+    imageToSave = Image.fromarray(array)
+    imageToSave.save("../"+person+"_TrainingData_"+ID+"/"+person+"Grid-" + str(i) + "-.jpg")
