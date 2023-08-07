@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from PIL import Image
 
-filename = "Forms/FormStefanP.jpg"
+filename = "Forms/FormStefan99_Web.jpg"
 
 cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 # cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))

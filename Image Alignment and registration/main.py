@@ -3,14 +3,13 @@ import random
 import math
 from ImageAlignment import align_images
 from collections import namedtuple
-import cv2
-from PIL import Image
+from PIL import Image, ImageFilter
 import numpy as np
 from Grid import *
 
-person = "David"
-ID = "3"
-num_samples = 5000
+person = "Stefan"
+ID = "1"
+num_samples = 100
 
 # create a named tuple which we can use to create locations of the
 # input document which we wish to OCR
@@ -24,12 +23,12 @@ for y_num, char in enumerate(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
     for num in range(6):
         OCR_LOCATIONS.append(OCRLocation(char + "_" + str(num), (x_values[num], y_values[y_num], 114, 93)))
 
-image = cv2.imread("Forms/Form"+person+".jpg")
-template = cv2.imread("User Input Form V4 template.jpg")
+image = Image.open("Forms/Form"+person+".jpg")
+template = Image.open("User Input Form V4 template.jpg")
 
-aligned = align_images(image, template)
+aligned = align_images(np.array(image), np.array(template))
 
-grouped_characters = {name: [None for _ in range(5)] for name in ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
+grouped_characters = {name: [None for _ in range(6)] for name in ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
                                                                   "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
                                                                   "w", "x", "y", "z"]}
 # loop over the locations of the document we are going to OCR
@@ -53,8 +52,14 @@ for loc in OCR_LOCATIONS:
 # imageToSave = Image.fromarray(arrayToSave)
 # imageToSave.show()
 # imageToSave.save("output samples 5 V4.jpg")
+
+
 for i in range(num_samples):
     print(i, "/", num_samples)
-    array = constructGridRandomly(grouped_characters)
+    array = constructArrayRandomly(grouped_characters)
     imageToSave = Image.fromarray(array)
-    imageToSave.save("../"+person+"_TrainingData_"+ID+"/"+person+"Grid-" + str(i) + "-.jpg")
+    imageToSave = imageToSave.filter(ImageFilter.SHARPEN)
+    imageToSave.save("../../"+person+"_TrainingData_"+ID+"/"+person+"Grid-" + str(i) + "-.jpg")
+
+
+# array = constructArrayRandomly(grouped_characters, debug=True)

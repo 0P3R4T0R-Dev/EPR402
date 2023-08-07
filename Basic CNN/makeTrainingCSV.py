@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 
-num_pixels = 28 ** 2
+num_pixels = 80 ** 2
 num_samples = 5000
 
 person = ["Keegan", "Stefan", "Johan", "David", "StefanP"]
@@ -16,7 +16,7 @@ for P in range(len(person)):
         if i % 100 == 0:
             print(i, "/", num_samples)
         # 1. Read image
-        img = Image.open('../' + person[P] + '_TrainingData_' + ID[P] + '/' + person[P] + 'Grid-' + str(i) + '-.jpg')
+        img = Image.open('../../' + person[P] + '_TrainingData_' + ID[P] + '/' + person[P] + 'Grid-' + str(i) + '-.jpg')
         img = img.resize((int(math.sqrt(num_pixels)), int(math.sqrt(num_pixels))))  # consider resizing image to not have MANY MANY pixels
         img = img.convert("L")
         img = Image.eval(img, lambda px: 255 - px)

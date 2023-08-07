@@ -49,6 +49,28 @@ def showSomeData(Y_train, X_train, numToDisplay):
         plt.imshow(current_image, interpolation='nearest')
         plt.show()
 
+
+def split_2d_into_groups(arr, group_size):
+    num_rows, num_cols = arr.shape
+    num_groups = num_rows // group_size
+    groups = [arr[i * group_size: (i + 1) * group_size, :] for i in range(num_groups)]
+    return np.array(groups)
+
+
+def split_into_groups(arr, group_size):
+    num_groups = len(arr) // group_size
+    groups = [arr[i * group_size : (i + 1) * group_size] for i in range(num_groups)]
+    return np.array(groups)
+
+
+if __name__ == '__main__':
+    data = setupData('train784.csv')
+    Y_train, X_train = separateDataANDLabel(data)
+    Y_train = split_into_groups(Y_train, 1000)
+    X_train = split_2d_into_groups(X_train.T, 1000)
+    showSomeData(Y_train[0], X_train[0], 10)
+
+
 # print("Loading data...")
 # data = pd.read_csv('train.csv')
 # data = np.array(data)

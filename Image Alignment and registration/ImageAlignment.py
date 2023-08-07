@@ -61,7 +61,9 @@ def align_images(image, template, maxFeatures=500, keepPercent=0.2,
 
 
 if __name__ == "__main__":
-    image = cv2.imread("Forms/FormKeegan.jpg")
+    image = cv2.imread("Forms/FormStefan99_Web.jpg")
+    image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+    image = cv2.resize(image, (2481, 3509))
     template = cv2.imread("User Input Form V4 template.jpg")
 
     aligned = align_images(image, template, debug=True)

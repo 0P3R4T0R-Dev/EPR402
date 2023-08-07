@@ -199,11 +199,7 @@ class Loss_CategoricalCrossEntropy(Loss):
         # Clip data to prevent division by 0
         # Clip both sides to not drag mean towards any value
         y_predicted_clipped = np.clip(y_predicted, 1e-7, 1 - 1e-7)
-        correct_confidences = None
-        if len(y_true.shape) == 1:  # 1D arrays
-            correct_confidences = y_predicted_clipped[range(num_samples), y_true]
-        # elif len(y_true.shape) == 2:  # this is true for 2D arrays
-        #     correct_confidences = np.sum(y_predicted_clipped * y_true, axis=1)
+        correct_confidences = y_predicted_clipped[range(num_samples), y_true]
         negative_log_likelihoods = -np.log(correct_confidences)
         return negative_log_likelihoods
 
@@ -384,7 +380,7 @@ class Layer_MyConvolution:
 
     def forward(self, inputs):
         self.inputs = inputs
-        self.output = np.dot(inputs, self.weights) + self.biases
+        self.output = np.dot(inputs, np.multiply(self.weights, self.vectorKernel)) + self.biases
 
     def backward(self, d_values):
         """The d_ variables represent the (partial) derivatives of the respective variable"""
@@ -410,7 +406,7 @@ class Layer_MyConvolution:
             self.d_biases += 2 * self.bias_lambda_l2 * self.biases
 
         # Gradient on values
-        self.d_inputs = np.dot(d_values, self.weights.T)
+        self.d_inputs = np.dot(d_values, np.multiply(self.weights, self.vectorKernel).T)
 
 
 def get_predictions(A2):
@@ -430,3 +426,13 @@ def one_hot(Y):
     oneHot[np.arange(Y.size), Y] = 1  # TODO need to investigate this line more
     oneHot = oneHot.T
     return oneHot
+
+
+def patience_five(arr):
+    if len(arr) < 5:
+        return False
+    meanArr = np.mean(arr[-5:])
+    if meanArr > 0.2:
+        return False
+    return True
+
