@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Basic CNN/.idea/Basic CNN.iml" filepath="$PROJECT_DIR$/../Basic CNN/.idea/Basic CNN.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Character Segmentation and Extraction.iml" filepath="$PROJECT_DIR$/.idea/Character Segmentation and Extraction.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Image Alignment and registration/.idea/Image Alignment and registration.iml" filepath="$PROJECT_DIR$/../Image Alignment and registration/.idea/Image Alignment and registration.iml" />
+    </modules>
+  </component>
+</project>
