@@ -1,7 +1,7 @@
 import cv2
 from PIL import Image
 
-filename = "Johan_4Sentences.jpg"
+filename = "Dewald_Sentences.jpg"
 
 cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 # cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
@@ -25,7 +25,7 @@ while flag:
     # Display the resulting frame
     # cv2.imshow('frame', frame)
     frameSmaller = cv2.resize(frame, (960, 540))
-    cv2.imshow('frame', frameSmaller)
+    cv2.imshow(filename, frameSmaller)
     if cv2.waitKey(1) == ord('q'):
         flag = False
         cv2.imwrite(filename, frame)

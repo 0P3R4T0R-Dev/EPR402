@@ -83,3 +83,4 @@ def constructSmallerGridRandomly(images, debug=False):
         image_to_show.show()
     return basicGrid
 
+

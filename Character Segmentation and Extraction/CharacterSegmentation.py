@@ -3,52 +3,15 @@ import numpy as np
 import imutils
 import cv2
 from PIL import Image
+import os
+from HelperFunctions import *
 
+filename = "Myburgh_BigParagraph"
 
-def overlap(source, target):
-    # unpack points
-    x1, y1, w1, h1 = source
-    x2, y2, w2, h2 = target
+folder_path = "C:/EPR402 REPO/DATA/" + filename
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
 
-    # checks
-    if x1 >= x2 + w2 or x2 >= x1 + w1:
-        return False
-    if y1 >= y2 + h2 or y2 >= y1 + h1:
-        return False
-    return True
-
-
-def getAllOverlaps(boxes, bounds, index):
-    overlaps = []
-    for a in range(len(boxes)):
-        if a != index:
-            if overlap(bounds, boxes[a]):
-                overlaps.append(a)
-    return overlaps
-
-
-def doesContain(source, target):
-    # unpack points
-    x1, y1, w1, h1 = source
-    x2, y2, w2, h2 = target
-
-    # checks
-    if x1 <= x2 and x1 + w1 >= x2 + w2:
-        if y1 <= y2 and y1 + h1 >= y2 + h2:
-            return True
-    return False
-
-
-def getAllContains(boxes, bounds, index):
-    contains = []
-    for a in range(len(boxes)):
-        if a != index:
-            if doesContain(bounds, boxes[a]):
-                contains.append(a)
-    return contains
-
-
-filename = "Johan_Sentences"
 image = cv2.imread(filename + ".jpg")
 orig = np.copy(image)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -148,14 +111,22 @@ imgArr = np.array(img)
 counter = 0
 for (x, y, w, h) in boxes:
     # crop
-    # x -= merge_margin
-    # y -= merge_margin
-    # w += merge_margin
-    # h += merge_margin
+    try:
+        x -= merge_margin
+        y -= merge_margin
+        w += merge_margin
+        h += merge_margin
+        testCrop = imgArr[y:y + h, x:x + w]
+    except ValueError:
+        continue
     if w * h < 500:
         continue
+    x += merge_margin
+    y += merge_margin
+    w -= merge_margin
+    h -= merge_margin
     crop = imgArr[y:y + h, x:x + w]
     crop = Image.fromarray(crop)
     # save
-    crop.save(filename + "/" + str(counter) + ".jpg")
+    # crop.save(folder_path + "/" + str(counter) + ".jpg")
     counter += 1
