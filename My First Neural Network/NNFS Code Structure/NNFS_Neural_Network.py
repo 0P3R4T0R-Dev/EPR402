@@ -382,7 +382,7 @@ class Layer_MyConvolution:
 
     def forward(self, inputs):
         self.inputs = inputs
-        self.output = np.dot(inputs, self.weights) + self.biases
+        self.output = np.dot(inputs, np.multiply(self.weights, self.vectorKernel)) + self.biases
 
     def backward(self, d_values):
         """The d_ variables represent the (partial) derivatives of the respective variable"""
@@ -408,5 +408,5 @@ class Layer_MyConvolution:
             self.d_biases += 2 * self.bias_lambda_l2 * self.biases
 
         # Gradient on values
-        self.d_inputs = np.dot(d_values, self.weights.T)
+        self.d_inputs = np.dot(d_values, np.multiply(self.weights, self.vectorKernel).T)
 

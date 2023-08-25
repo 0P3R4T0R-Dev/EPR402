@@ -71,12 +71,7 @@ for i in range(epochs):
     activation1.forward(conv1.output)
     dropout1.forward(activation1.output)
     dense2.forward(dropout1.output)
-    data_loss = loss_activation.forward(dense2.output, Y_train)
-
-    regularization_loss = \
-        loss_activation.loss.regularization_loss(conv1) + \
-        loss_activation.loss.regularization_loss(dense2)
-    loss = data_loss + regularization_loss
+    loss_activation.forward(dense2.output, Y_train)
 
     loss_activation.backward(loss_activation.output, Y_train)
     dense2.backward(loss_activation.d_inputs)
@@ -92,13 +87,20 @@ for i in range(epochs):
     conv1.forward(X_dev.T)
     activation1.forward(conv1.output)
     dense2.forward(activation1.output)
-    loss_activation.forward(dense2.output, Y_dev)
+    data_loss = loss_activation.forward(dense2.output, Y_dev)
+
+    regularization_loss = \
+        loss_activation.loss.regularization_loss(conv1) + \
+        loss_activation.loss.regularization_loss(dense2)
+    loss = data_loss + regularization_loss
     prediction = get_predictions(loss_activation.output)
     acc = get_accuracy(prediction, Y_dev)
     accuracy.append(acc)
     if i % 10 == 0:
         print("Iteration: ", i)
-        # print("Loss: ", loss)
+        print("Loss: ", loss)
+        print("data_loss: ", data_loss)
+        print("regularization_loss: ", regularization_loss)
         print(prediction[:20])
         print(Y_dev[:20])
         print("Accuracy: ", acc)

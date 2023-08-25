@@ -2,9 +2,10 @@ import numpy as np
 import cv2
 from PIL import Image
 
+filename = "Forms/FormJohanTest.jpg"
 
 cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+# cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 width = 1920
 height = 1080
 cam.set(cv2.CAP_PROP_FRAME_WIDTH, width)
@@ -28,11 +29,11 @@ while flag:
     cv2.imshow('frame', frameSmaller)
     if cv2.waitKey(1) == ord('q'):
         flag = False
-        cv2.imwrite("testMyburgh.jpg", frame)
+        cv2.imwrite(filename, frame)
         break
 
 cam.release()
 cv2.destroyAllWindows()
 
-image = Image.open("testMyburgh.jpg")
+image = Image.open(filename)
 image.show()

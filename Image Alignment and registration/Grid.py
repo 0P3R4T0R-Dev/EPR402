@@ -88,3 +88,20 @@ def constructGridRandomly(characters, noForm=True, debug=False):
         image_to_show = Image.merge("RGB", (r, g, b))
         image_to_show.show()
     return basicGrid
+
+
+def constructArrayRandomly(characters, noForm=True, debug=False):
+    basicGrid = np.array([])
+    for i, character in enumerate(characters):
+        if i == 0:
+            basicGrid = characters[character][random.randint(noForm, 5)]
+        else:
+            basicGrid = np.hstack((basicGrid, characters[character][random.randint(noForm, 5)]))
+
+    if debug:
+        image_array = np.array(basicGrid)
+        image_to_show = Image.fromarray(image_array)
+        # b, g, r = image_to_show.split()
+        # image_to_show = Image.merge("RGB", (r, g, b))
+        image_to_show.show()
+    return basicGrid
