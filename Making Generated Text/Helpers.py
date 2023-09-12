@@ -1,4 +1,6 @@
 import numpy as np
+import os
+import random
 
 
 def imageToBinary(image, threshold=128, flipped=False):
@@ -75,10 +77,20 @@ def addLetterToCanvas(canvas, letter, x, y):
 
 def getImageOfLetter(letter, folderName):
     import PIL.Image as Image
-    image = Image.open(folderName + "/" + letter + ".jpg").convert("L")
+    length = len(os.listdir(folderName + "/" + letter)) - 1
+    image = Image.open(folderName + "/" + letter + "/" + str(random.randint(0, length)) + ".jpg").convert("L")
     image = imageToBinary(image, 100)
     image = np.array(image)
     return image
+
+
+def getName(folderPath):
+    file_names = os.listdir(folderPath)
+    if len(file_names) == 0:
+        return "0"
+    return str(len(file_names))
+
+
 
 
 

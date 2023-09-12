@@ -6,8 +6,8 @@ from PIL import Image
 import os
 from Helpers import *
 
-filename = "TestingCSVDesign2-Greg"
-folderName = "greg"
+filename = "TestingCSVDesign2-David"
+folderName = "../../FONTS/" + "david"
 
 
 image = cv2.imread(filename + ".jpg")
@@ -142,12 +142,17 @@ for key in sorted(boxesDictionary.keys()):
 sortedBoxes = np.array(sortedBoxes)
 
 sentence = "thequickbrownfoxjumpsoverthelazydog"
+groupedLetters = []
+
+
 counter = 0
 for (x, y, w, h) in sortedBoxes:
     crop = imgArr[y:y + h, x:x + w]
     crop = Image.fromarray(crop)
     # save
     # crop.save(folder_path + "/" + str(counter) + ".jpg")
-    crop.save(folderName + "/" + str(sentence[counter]) + ".jpg")
+    if not os.path.exists(folderName + "/" + str(sentence[counter])):
+        os.makedirs(folderName + "/" + str(sentence[counter]))
+    crop.save(folderName + "/" + str(sentence[counter]) + "/" + getName(folderName + "/" + str(sentence[counter])) + ".jpg")
     # crop.save("temp/" + str(counter) + ".jpg")
     counter += 1

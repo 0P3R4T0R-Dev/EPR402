@@ -4,7 +4,7 @@ import PIL.Image as Image
 
 
 sentence = "my name is greg and stefan is awesome"
-hand_writer = "greg"
+hand_writer = "david"
 sentenceImages = []
 
 for letter in sentence:
