@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from PIL import Image
 
-filename = "Forms/FormJulietFirstHalf.jpg"
+filename = "Forms/TESTTINGDELETE.jpg"
 
 cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 # cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
@@ -14,9 +14,11 @@ flag = True
 if not cam.isOpened():
     print("Cannot open camera")
     exit()
+focus = 0  # min: 0, max: 255, increment:5
 while flag:
     # Capture frame-by-frame
     ret, frame = cam.read()
+    cam.set(28, focus)  # cv2.CAP_PROP_FOCUS
     # if frame is read correctly ret is True
     if not ret:
         print("Can't receive frame (stream end?). Exiting ...")
@@ -29,8 +31,14 @@ while flag:
     cv2.imshow('frame', frameSmaller)
     if cv2.waitKey(1) == ord('q'):
         flag = False
-        cv2.imwrite(filename, frame)
         break
+    cv2.imwrite(filename, frame)
+    if cv2.waitKey(1) == ord('i'):
+        focus += 5
+        print(focus)
+    if cv2.waitKey(1) == ord('o'):
+        focus -= 5
+        print(focus)
 
 cam.release()
 cv2.destroyAllWindows()

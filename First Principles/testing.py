@@ -2,22 +2,21 @@ from imutils.contours import sort_contours
 import numpy as np
 import imutils
 import cv2
-from PIL import Image
+import PIL.Image as Image
 import os
 from Helpers import *
+from cannyEdgeDetection import myCanny
 
-filename = "TestingCSVDesign2-David"
+filename = "TestingCSVDesign2"
 folderName = "../../FONTS/" + "david"
 
 
-image = cv2.imread(filename + ".jpg")
+image = Image.open(filename + ".jpg")
+image = np.array(image)
 orig = np.copy(image)
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # convert the input image to grayscale (0-255)
-blurred = cv2.GaussianBlur(gray, (5, 5), 0)  # performs standard blurring on grayscale image
-# perform edge detection, find contours in the edge map, and sort the
-# resulting contours from left-to-right
-edged = cv2.Canny(blurred, 30, 150)
-# cv2.imshow("Edged", edged)
+gray = np.array(Image.fromarray(image).convert("F"))
+edged = myCanny(gray)
+edged = np.array(edged, dtype=np.uint8)
 contours = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 contours = imutils.grab_contours(contours)
 contours = sort_contours(contours, method="left-to-right")[0]
@@ -151,8 +150,8 @@ for (x, y, w, h) in sortedBoxes:
     crop = Image.fromarray(crop)
     # save
     # crop.save(folder_path + "/" + str(counter) + ".jpg")
-    if not os.path.exists(folderName + "/" + str(sentence[counter])):
-        os.makedirs(folderName + "/" + str(sentence[counter]))
-    crop.save(folderName + "/" + str(sentence[counter]) + "/" + getName(folderName + "/" + str(sentence[counter])) + ".jpg")
+    # if not os.path.exists(folderName + "/" + str(sentence[counter])):
+    #     os.makedirs(folderName + "/" + str(sentence[counter]))
+    # crop.save(folderName + "/" + str(sentence[counter]) + "/" + getName(folderName + "/" + str(sentence[counter])) + ".jpg")
     # crop.save("temp/" + str(counter) + ".jpg")
     counter += 1

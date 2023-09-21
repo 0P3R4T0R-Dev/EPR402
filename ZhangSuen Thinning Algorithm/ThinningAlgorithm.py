@@ -145,12 +145,12 @@ def zhangSuenThinning(imageArr):
 
 
 if __name__ == '__main__':
-    image = readImage('sentenceGreg.jpg')
+    image = readImage('awesome.jpg')
     image = imageToBinary(image)
     displayImage(image)
     image = zhangSuenThinning(image)
     displayImage(image)
-    # saveImage(image, 'JohanThinned.jpg')
+    # saveImage(image, 'awesomeThinned.jpg')
 
 
 
