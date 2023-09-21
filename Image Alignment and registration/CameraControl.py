@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from PIL import Image
 
-filename = "Forms/TESTTINGDELETE.jpg"
+filename = "Annelise.jpg"
 
 cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 # cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
@@ -18,7 +18,7 @@ focus = 0  # min: 0, max: 255, increment:5
 while flag:
     # Capture frame-by-frame
     ret, frame = cam.read()
-    cam.set(28, focus)  # cv2.CAP_PROP_FOCUS
+    cam.set(28, 25)  # cv2.CAP_PROP_FOCUS
     # if frame is read correctly ret is True
     if not ret:
         print("Can't receive frame (stream end?). Exiting ...")
@@ -31,14 +31,14 @@ while flag:
     cv2.imshow('frame', frameSmaller)
     if cv2.waitKey(1) == ord('q'):
         flag = False
+        cv2.imwrite(filename, frame)
         break
-    cv2.imwrite(filename, frame)
-    if cv2.waitKey(1) == ord('i'):
-        focus += 5
-        print(focus)
-    if cv2.waitKey(1) == ord('o'):
-        focus -= 5
-        print(focus)
+    # elif cv2.waitKey(1) == ord('i'):
+    #     focus += 5
+    #     print(focus)
+    # elif cv2.waitKey(1) == ord('o'):
+    #     focus -= 5
+    #     print(focus)
 
 cam.release()
 cv2.destroyAllWindows()

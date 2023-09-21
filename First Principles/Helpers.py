@@ -4,6 +4,7 @@ import random
 
 
 def imageToBinary(image, threshold=128, flipped=False):
+    """the higher the threshold the more black pixels there will be"""
     upper = 255
     lower = 0
     if flipped:

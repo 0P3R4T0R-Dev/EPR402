@@ -130,10 +130,17 @@ def readImage(filename):
     return Image.open(filename).convert('L')
 
 
-def imageToBinary(image):
+def imageToBinary(image, threshold=128, flipped=False):
+    """the higher the threshold the more black pixels there will be"""
+    upper = 255
+    lower = 0
+    if flipped:
+        upper = 0
+        lower = 255
     imageArr = np.array(image)
-    imageArr[imageArr > 128] = 255
-    imageArr[imageArr <= 128] = 0
+    copyImage = np.copy(imageArr)
+    imageArr[copyImage > threshold] = upper
+    imageArr[copyImage <= threshold] = lower
     return imageArr
 
 
@@ -191,8 +198,9 @@ while line != "Ready":
     line = serial_connection.readline().decode().strip()
     time.sleep(0.001)
 print("Arduino: ", line)
-image = readImage('DavidTestThinned.jpg')
-imArr = imageToBinary(image)
+startTime = time.time()
+image = readImage('AnneliseThinned.jpg')
+imArr = imageToBinary(image, threshold=90)
 # imArr = np.matrix(imArr)
 # imArr = imArr.transpose()
 # imArr = np.array(imArr)
@@ -222,6 +230,8 @@ while pointer != (-1, -1):
             break
     imArr[pointer[0], pointer[1]] = 255
     counter += 1
+endTime = time.time()
+print("Time taken: ", endTime - startTime)
 #     if counter % 10 == 0:
 #         displayImage(canvas)
 # displayImage(canvas, final=True)

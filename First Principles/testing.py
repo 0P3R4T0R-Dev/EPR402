@@ -7,7 +7,7 @@ import os
 from Helpers import *
 from cannyEdgeDetection import myCanny
 
-filename = "TestingCSVDesign2"
+filename = "TestingCameraHolderV1"
 folderName = "../../FONTS/" + "david"
 
 

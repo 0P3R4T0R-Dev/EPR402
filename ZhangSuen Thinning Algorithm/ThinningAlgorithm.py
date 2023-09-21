@@ -6,10 +6,17 @@ def readImage(filename):
     return Image.open(filename).convert('L')
 
 
-def imageToBinary(image):
+def imageToBinary(image, threshold=128, flipped=False):
+    """the higher the threshold the more black pixels there will be"""
+    upper = 255
+    lower = 0
+    if flipped:
+        upper = 0
+        lower = 255
     imageArr = np.array(image)
-    imageArr[imageArr > 128] = 255
-    imageArr[imageArr <= 128] = 0
+    copyImage = np.copy(imageArr)
+    imageArr[copyImage > threshold] = upper
+    imageArr[copyImage <= threshold] = lower
     return imageArr
 
 
@@ -145,12 +152,12 @@ def zhangSuenThinning(imageArr):
 
 
 if __name__ == '__main__':
-    image = readImage('awesome.jpg')
-    image = imageToBinary(image)
+    image = readImage('Annelise.jpg')
+    image = imageToBinary(image, threshold=90)
     displayImage(image)
     image = zhangSuenThinning(image)
     displayImage(image)
-    # saveImage(image, 'awesomeThinned.jpg')
+    saveImage(image, 'AnneliseThinned.jpg')
 
 
 
