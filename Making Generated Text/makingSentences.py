@@ -3,8 +3,8 @@ import Helpers
 import PIL.Image as Image
 
 
-sentence = "hallo leon"
-hand_writer = "stefan"
+sentence = "i ate a fish today"  # length max 30
+hand_writer = "matthew"
 sentenceImages = []
 
 for letter in sentence:
@@ -28,6 +28,7 @@ for i, image in enumerate(sentenceImages):
     x += image.shape[1]
 canvas = Image.fromarray(canvas)
 canvas.show()
+canvas.save("i ate a fish today.jpg")
 
 
 

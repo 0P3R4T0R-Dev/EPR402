@@ -17,20 +17,24 @@ orig = np.copy(image)
 gray = np.array(Image.fromarray(image).convert("F"))
 edged = myCanny(gray)
 edged = np.array(edged, dtype=np.uint8)
-contours = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-contours = imutils.grab_contours(contours)
-contours = sort_contours(contours, method="left-to-right")[0]
+contours = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+# contours = imutils.grab_contours(contours)
+# contours = sort_contours(contours, method="left-to-right")[0]
+# box = sort_contours(contours, method="left-to-right")[1]
+# print("bounding Boxes: ", box)
 
 # initialize the list of contour bounding boxes and associated
 # characters that we'll be OCR'ing
-chars = []
 
+chars = []
 # loop over the contours
 for c in contours:
     # compute the bounding box of the contour
     (x, y, w, h) = cv2.boundingRect(c)
     chars.append((x, y, w, h))
+print("chars: ", chars)
 
+exit(0)
 # extract the bounding box locations and padded characters
 boxes = [b for b in chars]
 # loop over the predictions and bounding box locations together

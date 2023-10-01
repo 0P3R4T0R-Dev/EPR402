@@ -115,6 +115,7 @@ def nextPixel(imageArr, pixelX, pixelY):
             return pixels[i][1], pixels[i][2]
     return -1, -1
 
+
 # keep following along the black pixel until you can can't
 # for each black pixel, add a white pixel to a black image in the same location
 # display the image often to show the tracing process
@@ -173,6 +174,14 @@ def controlPenZ(up="UP"):
     print("Arduino: ", line1)
 
 
+def calibrate():
+    serial_connection.write("calibrate,0,0,0,0".encode())
+    line1 = serial_connection.readline().decode().strip()
+    while line1 != "OK calibrate":
+        line1 = serial_connection.readline().decode().strip()
+        time.sleep(0.001)
+
+
 def euclidean_distance(point1, point2):
     squared_distance = sum((p1 - p2) ** 2 for p1, p2 in zip(point1, point2))
     distance = math.sqrt(squared_distance)
@@ -198,9 +207,10 @@ while line != "Ready":
     line = serial_connection.readline().decode().strip()
     time.sleep(0.001)
 print("Arduino: ", line)
+calibrate()
 startTime = time.time()
-image = readImage('AnneliseThinned.jpg')
-imArr = imageToBinary(image, threshold=90)
+image = readImage('i ate a fish today THINNED.jpg')
+imArr = imageToBinary(image, threshold=110)
 # imArr = np.matrix(imArr)
 # imArr = imArr.transpose()
 # imArr = np.array(imArr)
@@ -237,11 +247,3 @@ print("Time taken: ", endTime - startTime)
 # displayImage(canvas, final=True)
 
 # add a function that checks if the pixels has 2 neighbours in each direction
-
-
-
-
-
-
-
-

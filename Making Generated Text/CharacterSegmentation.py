@@ -6,8 +6,8 @@ from PIL import Image
 import os
 from Helpers import *
 
-filename = "TestingCSVDesign2-David"
-folderName = "../../FONTS/" + "david"
+filename = "MatthewFox"
+folderName = "../../FONTS/" + "matthew"
 
 
 image = cv2.imread(filename + ".jpg")
@@ -141,7 +141,7 @@ for key in sorted(boxesDictionary.keys()):
 
 sortedBoxes = np.array(sortedBoxes)
 
-sentence = "thequickbrownfoxjumpsoverthelazydog"
+sentence = "thequickbrownfoxjumpsoverthelazydogTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOG"
 groupedLetters = []
 
 
