@@ -152,12 +152,12 @@ def zhangSuenThinning(imageArr):
 
 
 if __name__ == '__main__':
-    image = readImage('i ate a fish today.jpg')
-    image = imageToBinary(image, threshold=110)
+    image = readImage('Something is afoot and its not at the end of my leg.jpg')
+    image = imageToBinary(image, threshold=90)
     displayImage(image)
     image = zhangSuenThinning(image)
     displayImage(image)
-    saveImage(image, 'i ate a fish today THINNED.jpg')
+    saveImage(image, 'Something is afoot and its not at the end of my leg - thinned.jpg')
 
 
 

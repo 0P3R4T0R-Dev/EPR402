@@ -6,8 +6,8 @@ from PIL import Image
 import os
 from Helpers import *
 
-filename = "MatthewFox"
-folderName = "../../FONTS/" + "matthew"
+filename = "dewaldFox"
+folderName = "../../FONTS/" + "dewaldCapital"
 
 
 image = cv2.imread(filename + ".jpg")
@@ -149,10 +149,10 @@ counter = 0
 for (x, y, w, h) in sortedBoxes:
     crop = imgArr[y:y + h, x:x + w]
     crop = Image.fromarray(crop)
-    # save
-    # crop.save(folder_path + "/" + str(counter) + ".jpg")
-    if not os.path.exists(folderName + "/" + str(sentence[counter])):
-        os.makedirs(folderName + "/" + str(sentence[counter]))
-    crop.save(folderName + "/" + str(sentence[counter]) + "/" + getName(folderName + "/" + str(sentence[counter])) + ".jpg")
-    # crop.save("temp/" + str(counter) + ".jpg")
+    letterVariable = sentence[counter]
+    if letterVariable.isupper():
+        letterVariable = letterVariable + "_"
+    if not os.path.exists(folderName + "/" + str(letterVariable)):
+        os.makedirs(folderName + "/" + str(letterVariable))
+    crop.save(folderName + "/" + str(letterVariable) + "/" + getName(folderName + "/" + str(letterVariable)) + ".jpg")
     counter += 1

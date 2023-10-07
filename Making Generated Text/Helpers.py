@@ -91,7 +91,22 @@ def getName(folderPath):
     return str(len(file_names))
 
 
+def addLettersToCanvas(letters, sentence, x=20):
+    # this takes the letters and puts them on a canvas
+    canvas = np.ones((120, 1112), np.uint8) * 255
 
+    for i, image in enumerate(letters):  # down shift is lower number
+        if sentence[i] in ["h", "l", "k", "b", "d", "f"]:
+            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 40)
+        elif sentence[i] in ["g", "j", "p", "q", "y"]:
+            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 60)
+        elif sentence[i].isupper():
+            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 40)
+        else:
+            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 50)
+        # Helpers.addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 100)
+        x += image.shape[1] - 5
+    return canvas
 
 
 
