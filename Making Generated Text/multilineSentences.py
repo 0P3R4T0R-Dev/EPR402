@@ -8,7 +8,8 @@ import random
 
 maxCharsPerLine = 35
 
-sentence = "Something is afoot and its not at the end of my leg"  # length max 30
+sentence = "something is afoot and its not at the end of my leg"
+# sentence = "something is aoo"
 hand_writer = "dewaldCapital"
 
 words = sentence.split(" ")
@@ -54,4 +55,4 @@ if totalCanvas.shape[0] > 1247:
     exit(1)
 totalCanvas = Image.fromarray(totalCanvas)
 totalCanvas.show()
-totalCanvas.save(sentence + ".jpg")
+# totalCanvas.save(sentence + ".jpg")

@@ -63,11 +63,17 @@ def getAllContains(boxes, bounds, index):
     return contains
 
 
-def addLetterToCanvas(canvas, letter, x, y):
+def addLetterToCanvas(canvas, letter, x, y, base="middle"):
     # canvas and letter are both only 2D numpy arrays
-
-    x = x - letter.shape[1] // 2
-    y = y - letter.shape[0] // 2
+    if base == "middle":
+        x = x - letter.shape[1] // 2
+        y = y - letter.shape[0] // 2
+    if base == "top":
+        x = x - letter.shape[1] // 2
+        y = y
+    if base == "bottom":
+        x = x - letter.shape[1] // 2
+        y = y - letter.shape[0]
 
     for row in range(letter.shape[0]):
         for col in range(letter.shape[1]):
@@ -92,19 +98,39 @@ def getName(folderPath):
 
 
 def addLettersToCanvas(letters, sentence, x=20):
-    # this takes the letters and puts them on a canvas
-    canvas = np.ones((120, 1112), np.uint8) * 255
-
-    for i, image in enumerate(letters):  # down shift is lower number
-        if sentence[i] in ["h", "l", "k", "b", "d", "f"]:
-            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 40)
+    """this takes the letters and puts them on a canvas"""
+    max_riser = 0
+    max_faller = 0
+    for i, letter in enumerate(letters):
+        if sentence[i] in ["b", "d", "f", "h", "k", "l"]:
+            if letter.shape[0] > max_riser:
+                max_riser = letter.shape[0]
         elif sentence[i] in ["g", "j", "p", "q", "y"]:
-            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 60)
+            if letter.shape[0] > max_faller:
+                max_faller = letter.shape[0]
+    upperLine = 0
+    lowerLine = 0
+    for i, letter in enumerate(letters):
+        if sentence[i] in ["a", "c", "e", "i", "m", "n", "o", "r", "s", "u", "v", "w", "x", "z"]:
+            if letter.shape[0] > lowerLine:
+                lowerLine = letter.shape[0]
+    heightOfCanvas = (upperLine+max_faller)-(lowerLine-max_riser)
+    canvas = np.ones((heightOfCanvas, 1112), np.uint8) * 255  # Here is the height of the canvas(line) that needs to
+    # be adjusted to add things like a signature which could be much taller than other letters in the handwriting
+
+    centreLine = abs(lowerLine-max_riser) + lowerLine//2
+    upperLine = centreLine - lowerLine//2
+    lowerLine = centreLine + lowerLine//2
+
+    for i, image in enumerate(letters):
+        if sentence[i] in ["h", "l", "k", "b", "d", "f"]:
+            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, lowerLine, base="bottom")
+        elif sentence[i] in ["g", "j", "p", "q", "y"]:
+            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, upperLine, base="top")
         elif sentence[i].isupper():
-            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 40)
+            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, lowerLine, base="bottom")
         else:
-            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 50)
-        # Helpers.addLetterToCanvas(canvas, image, x + image.shape[1] // 2, 100)
+            addLetterToCanvas(canvas, image, x + image.shape[1] // 2, centreLine, base="middle")
         x += image.shape[1] - 5
     return canvas
 

@@ -3,6 +3,7 @@ import numpy as np
 import PIL.Image as Image
 from scipy.ndimage import convolve
 import time
+# from numba import njit
 
 
 def sobel_filters(img):
@@ -24,6 +25,7 @@ def sobel_filters(img):
     return MagnitudeG, directionTheta
 
 
+# @njit
 def findAngle(angle):
     if (0 <= angle < 22.5) or (157.5 <= angle <= 180):
         return 0
@@ -35,7 +37,8 @@ def findAngle(angle):
         return 135
 
 
-def non_max_suppression(img, D):
+# @njit
+def non_max_suppression(img, angle):
     """
     Done to create thin edges instead of thick ones
     img: gradient magnitude
@@ -44,8 +47,8 @@ def non_max_suppression(img, D):
     """
     rows, cols = img.shape
     canvas = np.zeros((rows, cols), dtype=np.int32)
-    angle = D * 180. / np.pi  # convert angles into degrees
-    angle[angle < 0] += 180
+    # angle = D * 180. / np.pi  # convert angles into degrees
+    # angle[angle < 0] += 180
 
     for i in range(1, rows - 1):
         for j in range(1, cols - 1):
@@ -120,17 +123,21 @@ def myCanny(img, sigma=1.4, lowThresholdRatio=0.09, highThresholdRatio=0.17):
 
 
 if __name__ == "__main__":
-    image = Image.open("SoftCat.jpg").convert("F").resize((500, 500))
-    image.show()
+    start = time.time()
+    image = Image.open("dewaldFox.jpg").convert("F")
+    # image.show()
     image = np.array(image)
     image = convGaussBlur(image, sigma=1.4)
     image, Theta = sobel_filters(image)
-    image = non_max_suppression(image, Theta)
+    angle = Theta * 180. / np.pi  # convert angles into degrees
+    angle[angle < 0] += 180
+    image = non_max_suppression(image, angle)
     image = threshold(image)
     image = hysteresis(image)
     image = np.array(image)
     image = Image.fromarray(image)
     image.show()
+    print("Time taken: %f" % (time.time() - start))
 
 
 
